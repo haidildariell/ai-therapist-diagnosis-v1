@@ -13,10 +13,27 @@ LINE = (
 )
 
 
+def validate_line(line: str) -> str:
+    """Check a diagnosis line is 1-200 chars and not whitespace-only."""
+    if not isinstance(line, str):
+        raise ValueError("diagnosis line must be a string")
+    if not line.strip():
+        raise ValueError("diagnosis line must not be blank")
+    if not 1 <= len(line) <= 200:
+        raise ValueError("diagnosis line must be 1-200 characters")
+    return line
+
+
+def write_entry(line: str, path: str = "/output/entry.txt") -> None:
+    """Write one diagnosis line plus a trailing newline as UTF-8."""
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(line + "\n")
+
+
 def main() -> None:
-    os.makedirs("/output", exist_ok=True)
-    with open("/output/entry.txt", "w", encoding="utf-8") as f:
-        f.write(LINE + "\n")
+    """Validate the diagnosis line, then write it to /output/entry.txt."""
+    write_entry(validate_line(LINE))
 
 
 if __name__ == "__main__":
